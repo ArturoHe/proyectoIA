@@ -1,2 +1,3 @@
 v0.0.1 - Se anaden dependencias y requirements.txt
 v0.5.0 - Obtencion de datos
+v1.0.0 - Modelo Inicial Obtencion de datos y prediccion
