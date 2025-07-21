@@ -1,5 +1,6 @@
 import yfinance as yf
 from sklearn.linear_model import *
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import *
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
@@ -15,6 +16,9 @@ data["SMA_50"] = (data["Close"].rolling(window=50).mean())  # Obtenemos la SMA d
 data["SMA_100"] = (data["Close"].rolling(window=100).mean())  # Obtenemos la SMA de 100 periodos (Tendecia Larga)
 data["Return_diary"] = data["Close"].pct_change() ## Porcentaje de cambio intradiario
 data["Volatilidad_10d"] = data["Return_diary"].rolling(window=3).std() #Volatilidad 3 periodos
+data["diff"] = data['Close'].diff()
+data["ma_5"] = data['Close'].rolling(5).mean()
+data["return"] = data['Close'].pct_change()
 
 #####---- Calculo RSI 10 periodos ---------- (DATA)
 delta = data["Close"].diff()
@@ -36,19 +40,37 @@ data.dropna(inplace=True)  ##Limpiar datos
 
 
 ##### ----------------- Modelo
-X = data[["Close", "SMA_10", "SMA_50", "SMA_100","Return_diary","Volatilidad_10d","RSI_14"]] #Caracteristicas
+X = data[["Close", "SMA_10", "SMA_50", "SMA_100","Return_diary","Volatilidad_10d","RSI_14","diff","ma_5","return"]] #Caracteristicas
 y = data["Return_5d_suavizado"] #Funcion Objetivo (Suavizada)
 
+### ---------- Eliminacion de Valores atipicos
+q_low = y.quantile(0.01)
+q_high = y.quantile(0.99)
+mask = (y > q_low) & (y < q_high)
+X = X[mask]
+y = y[mask]
+
+#### ------------ Se escalan los X
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
 
 
-
+###---------- Entrenamiento y prueba
 X_train, X_test, y_train, y_test = train_test_split(X, y, shuffle=False, test_size=0.20) #80% Datos entrenamiento - 20% Datos test
-
-
 
 model = LinearRegression() #Regresion Lineal
 model.fit(X_train, y_train) #Entrenamiento
+
+###-------- Prediccion
 y_pred = model.predict(X_test)#prediccion
+
+###----- Errores
+print("MSE:", mean_squared_error(y_test, y_pred))
+print("R²:", r2_score(y_test, y_pred))
+
+tscv = TimeSeriesSplit(n_splits=5)
+scores = cross_val_score(model, X_scaled, y, cv=tscv, scoring="neg_mean_squared_error")
+print("MSE promedio (CV):", -scores.mean())
 
 
 plt.plot(y_test.values, label="Real")
