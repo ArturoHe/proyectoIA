@@ -55,8 +55,6 @@ y_pred = model.predict(X_test)  # prediccion
 print("MSE:", mean_squared_error(y_test, y_pred))
 print("R²:", r2_score(y_test, y_pred))
 print("MAE:", mean_absolute_error(y_test, y_pred))
-print("MAPE:", mean_absolute_percentage_error(y_test, y_pred))
-##print("RMSE:", mean_squared_error(y_test, y_pred, squared=False))  # squared=False => RMSE
 
 tscv = TimeSeriesSplit(n_splits=5)
 scores = cross_val_score(model, X_scaled, y, cv=tscv, scoring="neg_mean_squared_error")
@@ -65,7 +63,7 @@ print("MSE promedio (CV):", -scores.mean())
 
 plt.plot(y_test.values, label="Real")
 plt.plot(y_pred, label="Predicho")
-plt.title("Regresión de retorno a 5 días de " + symbol)
+plt.title("Regresión de retorno de " + symbol)
 plt.legend()
 plt.grid(True)
 plt.show()
