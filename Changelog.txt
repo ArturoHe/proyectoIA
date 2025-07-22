@@ -4,3 +4,4 @@ v1.0.0 - Modelo Inicial Obtencion de datos y prediccion
 v1.5.0 - Ajustes de parametros al modelo
 v1.5.1 - Se agrega errores y eliminan valores atipicos, se agrega más caracteristicas
 v1.5.2 - R²: -0.07432400903186509
+v2.0.0 - R²: 0.6646820935374392 Se dejó una sola caracteristica y a partir de ella trabajar
