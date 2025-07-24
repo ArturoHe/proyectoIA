@@ -68,7 +68,7 @@ plt.legend()
 plt.grid(True)
 plt.show()
 
-num_dias = 30  # Define cuántos días quieres mostrar
+num_dias = 10  # Define cuántos días quieres mostrar
 
 # Selecciona los últimos 'num_dias' de los valores reales y predichos
 # Como y_test es una Serie de Pandas, puedes usar .tail() o slicing
@@ -90,6 +90,6 @@ plt.xlabel("Fecha")  # Cambia la etiqueta del eje X a "Fecha"
 plt.ylabel("Retorno")  # Añade etiqueta para el eje Y
 plt.legend()
 plt.grid(True)  # Opcional: añade una cuadrícula para mejor lectura
-plt.xticks(rotation=90)  # Opcional: rota las etiquetas de fecha para que no se superpongan
+plt.xticks(rotation=45)  # Opcional: rota las etiquetas de fecha para que no se superpongan
 plt.tight_layout()  # Ajusta el diseño para evitar que las etiquetas se corten
 plt.show()
